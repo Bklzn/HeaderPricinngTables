@@ -32,7 +32,7 @@ const Navbar = () => {
   }, [location]);
 
   return (
-    <nav className="bg-[#2F1893] text-white px-4 py-3 max-w-[972px] mx-auto pt-17">
+    <nav className="bg-[#2F1893] text-white py-3 mx-auto pt-17">
       <div className="max-w-7xl mx-auto flex justify-between items-center text-[18px]">
         <h3 className="text-[24px] font-bold">Startup 3</h3>
 

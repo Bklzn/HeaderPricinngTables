@@ -1,15 +1,18 @@
-import { useState } from "react";
 import "./App.css";
 import Navbar from "./components/navbar/Navbar";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Overview from "./components/overview/Overview";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <BrowserRouter>
-      <div className="w-screen h-screen bg-[#2F1893]">
-        <Navbar />
+      <div className="w-full min-h-screen bg-[#2F1893] px-4">
+        <div className="max-w-[972px] m-auto">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Overview />} />
+          </Routes>
+        </div>
       </div>
     </BrowserRouter>
   );

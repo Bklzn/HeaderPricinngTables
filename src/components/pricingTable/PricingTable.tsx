@@ -1,4 +1,8 @@
+import { useEffect } from "react";
+import { animate, stagger } from "motion";
 import { Check } from "lucide-react";
+import { motion } from "motion/react";
+
 interface BenefitProps {
   name: string;
   avaliable: boolean;
@@ -48,14 +52,24 @@ const pricingPlans: PriceBoxProps[] = [
   },
 ];
 
-const PricingBox: React.FC<PriceBoxProps> = ({
+const PricingBox: React.FC<PriceBoxProps & { index: number }> = ({
   name,
   price,
   benefits,
   highlighted,
+  index,
 }) => {
+  useEffect(() => {
+    animate(
+      `.pricing-box-${index}`,
+      { opacity: [0, 1], y: [40, 0] },
+      { duration: 0.4, delay: index * 0.15 }
+    );
+    animate("li", { opacity: [0, 1] }, { delay: stagger(0.2) });
+  }, [index]);
+
   return (
-    <div className="max-w-[360px]">
+    <div className={`max-w-[360px] pricing-box-${index}`}>
       <div
         className={`${
           highlighted
@@ -90,9 +104,9 @@ const PricingBox: React.FC<PriceBoxProps> = ({
           accessible, and easy to share.
         </p>
       </div>
-      <ul className="gridpt-10 max-w-[200px] mx-auto py-8 space-y-2">
+      <ul className="grid pt-10 max-w-[200px] mx-auto py-8 space-y-2">
         {benefits.map((item, index) => (
-          <li key={index} className={!item.avaliable ? "opacity-30" : ""}>
+          <li key={index} className={!item.avaliable ? "text-gray-200" : ""}>
             <Check
               className={`text-[#25DAC5] inline w-[16px] me-2 ${
                 !item.avaliable ? "opacity-0" : ""
@@ -102,22 +116,24 @@ const PricingBox: React.FC<PriceBoxProps> = ({
           </li>
         ))}
       </ul>
-      <button
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         className={`${
           highlighted
             ? "bg-[#25DAC5] text-white border-[#25DAC5]"
             : "bg-white text-[#1E0E62] border-[#EBEAED]"
-        } border-2  font-semibold px-7 py-[9px] rounded-full hover:cursor-pointer block mx-auto`}
+        } border-2 font-semibold px-7 py-[9px] rounded-full hover:cursor-pointer block mx-auto`}
       >
         Start Free Trial
-      </button>
+      </motion.button>
     </div>
   );
 };
 
 const PricingTable: React.FC = () => {
   return (
-    <div className="py-25 text-[#15143966]">
+    <div className="pt-25 pb-10 text-[#15143966]">
       <h1 className="text-[42px] text-[#1E0E62] font-bold max-w-[550px] mx-auto text-center leading-13 pb-6">
         Simple & flexible pricing built for everyone
       </h1>
@@ -127,7 +143,7 @@ const PricingTable: React.FC = () => {
 
       <div className="max-w-6xl w-full mx-auto flex flex-row flex-wrap lg:flex-nowrap justify-center gap-8 gap-y-25">
         {pricingPlans.map((plan, index) => (
-          <PricingBox key={index} {...plan} />
+          <PricingBox key={index} index={index} {...plan} />
         ))}
       </div>
     </div>

@@ -1,33 +1,67 @@
 import "./App.css";
 import Navbar from "./components/navbar/Navbar";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Overview from "./components/overview/Overview";
 import { useAuth } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import PricingTable from "./components/pricingTable/PricingTable";
+import { AnimatePresence, motion } from "motion/react";
+import PageWrapper from "./motion/PageWrapper";
 
 function App() {
   const { authStatus } = useAuth();
-  return authStatus !== "logged_in" ? (
-    <div className="w-full min-h-screen bg-[#2F1893] px-4">
-      <Toaster />
-      <div className="max-w-[972px] m-auto">
-        <Navbar />
+  const location = useLocation();
 
-        <Routes>
-          <Route path="/" element={<Overview />} />
-        </Routes>
-      </div>
-    </div>
-  ) : (
-    <div className="w-full min-h-screen bg-white px-4">
-      <div className="max-w-[1130px] m-auto">
-        <Routes>
-          <Route path="/" element={<PricingTable />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
-    </div>
+  const bgColor = authStatus !== "logged_in" ? "#2F1893" : "#fff";
+  return (
+    <>
+      <Toaster />
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={authStatus}
+          initial={{ opacity: 0, backgroundColor: bgColor }}
+          animate={{ opacity: 1, backgroundColor: bgColor }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full min-h-screen px-4"
+        >
+          <div
+            className={`${
+              authStatus !== "logged_in" ? "max-w-[972px]" : "max-w-[1130px]"
+            } m-auto`}
+          >
+            {authStatus !== "logged_in" && <Navbar />}
+
+            <AnimatePresence mode="wait" initial={false}>
+              <Routes location={location} key={location.pathname}>
+                {authStatus !== "logged_in" ? (
+                  <Route
+                    path="/"
+                    element={
+                      <PageWrapper>
+                        <Overview />
+                      </PageWrapper>
+                    }
+                  />
+                ) : (
+                  <>
+                    <Route
+                      path="/"
+                      element={
+                        <PageWrapper>
+                          <PricingTable />
+                        </PageWrapper>
+                      }
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </>
+                )}
+              </Routes>
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </>
   );
 }
 

@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import PricingTable from "./components/pricingTable/PricingTable";
 import { AnimatePresence, motion } from "motion/react";
 import PageWrapper from "./motion/PageWrapper";
+import Form from "./components/form/Form";
 
 function App() {
   const { authStatus } = useAuth();
@@ -35,14 +36,17 @@ function App() {
             <AnimatePresence mode="wait" initial={false}>
               <Routes location={location} key={location.pathname}>
                 {authStatus !== "logged_in" ? (
-                  <Route
-                    path="/"
-                    element={
-                      <PageWrapper>
-                        <Overview />
-                      </PageWrapper>
-                    }
-                  />
+                  <>
+                    <Route
+                      path="/"
+                      element={
+                        <PageWrapper>
+                          <Overview />
+                        </PageWrapper>
+                      }
+                    />
+                    <Route path="/form" element={<Form />} />
+                  </>
                 ) : (
                   <>
                     <Route

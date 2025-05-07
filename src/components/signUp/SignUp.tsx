@@ -170,3 +170,5 @@ const SignUp = () => {
 };
 
 export default SignUp;
+export { Input };
+export { fakeSignUpRequest };
